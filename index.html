@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>הסטודיו של האפליקציה</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;800&family=Assistant:wght@400;600;700&display=swap">
+<style>
+/* VOICE: a working studio wall for one creator, warm and practical
+   IDEA: the production board pinned in an animation studio: cards per stage
+   PICTURE: the task board itself, open at the top
+   COLOUR and TYPE: Miro's teal ground band, Lili's notebook yellow as accent, ink on paper; Rubik + Assistant
+   LAYOUT: teal header with panel tabs, one panel at a time, a chat with Claude under each panel */
+:root{color-scheme:light dark;
+--bg:light-dark(#fbfaf6,#101716);--card:light-dark(#ffffff,#18221f);--ink:light-dark(#14211f,#e9f0ee);
+--mute:light-dark(#5b6b68,#9fb1ad);--line:light-dark(#e3e6e1,#2a3734);
+--teal:#0e6e6b;--teal-ink:light-dark(#0b5f5c,#7fd6cf);--teal2:light-dark(#d8eeec,#173a37);
+--yel:#ffd23f;--yel2:light-dark(#fff4c7,#3b3313);--yel-ink:light-dark(#6e5100,#f5d76e);
+--focus:light-dark(#14211f,#ffd23f);--gut:clamp(16px,4vw,40px)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 Assistant,system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3{font-family:Rubik,Assistant,sans-serif;line-height:1.15;margin:0;text-wrap:balance}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+[tabindex="-1"]:focus{outline:none}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.wrap{max-width:1240px;margin-inline:auto;padding-inline:var(--gut)}
+
+header{background:var(--teal);color:#fff;padding-top:28px}
+header :focus-visible{outline-color:var(--yel)}
+header h1{font-size:clamp(30px,4.4vw,46px);font-weight:800}
+header p{margin:6px 0 18px;opacity:.88;max-width:62ch}
+nav{display:flex;gap:6px;flex-wrap:wrap}
+nav a{text-decoration:none;font:600 16px Rubik,sans-serif;padding:12px 18px;border-radius:12px 12px 0 0;color:#fff;opacity:.88;min-height:44px;display:flex;align-items:center}
+nav a:not([aria-current]):hover{opacity:1;background:rgb(255 255 255/.12)}
+nav a[aria-current=page]{background:var(--bg);color:var(--ink);opacity:1}
+
+main{max-width:1240px;margin:0 auto;padding:28px var(--gut) 60px}
+section[hidden]{display:none}
+.lead{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.lead h2{font-size:clamp(26px,3vw,34px)}
+.lead p{margin:4px 0 0;color:var(--mute)}
+.count{font:700 15px Rubik,sans-serif;background:var(--yel2);padding:6px 12px;border-radius:99px}
+
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
+.col h3{font-size:18px;margin:0 0 10px;display:flex;gap:8px;align-items:center}
+.dot{flex:none;width:10px;height:10px;border-radius:50%;background:var(--mute)}
+.col.done .dot{background:var(--teal)}.col.open .dot{background:var(--yel)}
+.task{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:10px}
+.task b{display:block;font-family:Rubik,sans-serif;font-weight:500}
+.task span{color:var(--mute);font-size:15px}
+.col.done .task b{color:var(--mute)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:14px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:6px}
+.tile h3{font-size:19px}
+.tile small{color:var(--mute);font-size:14px}
+.tile a.go{margin-top:auto;padding-top:4px;font-weight:700;color:var(--teal-ink);text-decoration:none}
+.tile a.go:hover{text-decoration:underline}
+.badge{align-self:flex-start;font-size:13px;font-weight:700;padding:3px 10px;border-radius:99px;background:var(--teal2);color:var(--teal-ink)}
+.badge.wait{background:var(--yel2);color:var(--yel-ink)}
+
+.parts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:16px}
+.part{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px}
+.part h3{font-size:21px;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.part h3 small{font:600 14px Assistant,sans-serif;color:var(--mute);white-space:nowrap}
+.bar{height:8px;border-radius:99px;background:var(--line);margin:10px 0 12px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--teal);border-radius:99px}
+.part ul{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.part li{font-size:16px}
+.item{display:flex;gap:10px;align-items:baseline;text-decoration:none;padding:6px 8px;margin-inline:-8px;border-radius:10px;min-height:40px}
+.item:hover,.item:focus-visible{background:var(--teal2)}
+.item .arr{margin-inline-start:auto;color:var(--teal-ink);opacity:0;font-size:14px;font-weight:700;white-space:nowrap}
+.item:hover .arr,.item:focus-visible .arr{opacity:1}
+@media(hover:none){.item .arr{opacity:.75}}
+.chip{flex:none;font-size:12px;font-weight:700;padding:2px 9px;border-radius:99px;white-space:nowrap}
+.chip.d{background:var(--teal);color:#fff}.chip.s{background:var(--teal2);color:var(--teal-ink)}.chip.o{background:var(--yel2);color:var(--yel-ink)}
+
+.series{margin:26px 0 10px;font-size:20px}
+.note{color:var(--mute);font-size:15px;margin:12px 0}
+.note:empty{display:none}
+.prompt{font:13px/1.45 ui-monospace,Menlo,monospace;background:var(--teal2);padding:8px 10px;border-radius:10px;direction:ltr;text-align:left;overflow-wrap:anywhere}
+
+button{font:600 15px Assistant,sans-serif;border:0;border-radius:10px;padding:10px 16px;min-height:44px;cursor:pointer;background:var(--teal);color:#fff}
+button:hover{filter:brightness(1.1)}
+button:disabled{opacity:.55;cursor:progress;filter:none}
+button.ghost{align-self:flex-start;background:transparent;color:var(--teal-ink);border:1px solid currentColor;min-height:40px;padding:6px 12px}
+button.ghost:hover{background:var(--teal2);filter:none}
+@media(pointer:coarse){button.ghost{min-height:44px}}
+
+.chat{margin-top:34px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px}
+.chat h3{font-size:19px}
+.chat .sub{color:var(--mute);font-size:14px;margin:4px 0 12px;max-width:70ch}
+.log{display:flex;flex-direction:column;gap:8px;max-height:420px;overflow-y:auto;margin-bottom:10px}
+.log:empty{display:none}
+.msg{padding:10px 14px;border-radius:14px;max-width:85%;white-space:pre-wrap;unicode-bidi:plaintext}
+.msg.me{align-self:flex-start;background:var(--yel2)}
+.msg.ai{align-self:flex-end;background:var(--teal2)}
+.row{display:flex;gap:8px;align-items:end}
+textarea{flex:1;font:16px/1.4 Assistant,sans-serif;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);resize:vertical;min-height:48px}
+textarea::placeholder{color:var(--mute)}
+
+@media(max-width:600px){
+  header{padding-top:22px}
+  nav{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-inline:calc(var(--gut)*-1);padding:6px var(--gut) 0}
+  nav::-webkit-scrollbar{display:none}
+  nav a{flex:none;padding:10px 14px;font-size:15px}
+  .msg{max-width:95%}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>הסטודיו של האפליקציה</h1>
+    <p>כל מה שכבר נעשה ומה שעוד פתוח, בחלוניות נפרדות. בתחתית כל חלונית יש צ׳אט עם Claude על החלק הזה.</p>
+    <nav id="nav" aria-label="חלוניות">
+      <a href="#tasks">משימות</a>
+      <a href="#progress">התקדמות האפליקציה</a>
+      <a href="#docs">מסמכים</a>
+      <a href="#sheets">דפי דמות</a>
+      <a href="#voices">קולות</a>
+    </nav>
+  </div>
+</header>
+<main>
+  <section id="p-tasks">
+    <div class="lead"><div><h2 tabindex="-1">לוח המשימות</h2><p>מתעדכן בכל פעם שמשהו נגמר או נוסף.</p></div><span class="count" id="tcount"></span></div>
+    <div class="cols" id="board"></div>
+  </section>
+  <section id="p-progress" hidden>
+    <div class="lead"><div><h2 tabindex="-1">התקדמות לפי חלק באפליקציה</h2><p>כל מה שביקשת שיופיע באפליקציה, ומה המצב של כל דבר.</p></div><span class="count" id="pcount"></span></div>
+    <p class="note">לחיצה על כל שורה פותחת את המסמך שבו זה כתוב. מקרא: <b>בוצע</b> = יש תוצר מוכן. <b>אופיין</b> = ההחלטה נכתבה באפיון, אבל עוד לא עוצב או נבנה. <b>פתוח</b> = עוד לא התחלנו.</p>
+    <div class="parts" id="parts"></div>
+  </section>
+  <section id="p-docs" hidden>
+    <div class="lead"><div><h2 tabindex="-1">המסמכים של הפרויקט</h2><p>כל מסמך נפתח בעמוד משלו, ואפשר לערוך ולהגיב שם.</p></div></div>
+    <div class="grid" id="docgrid"></div>
+  </section>
+  <section id="p-sheets" hidden>
+    <div class="lead"><div><h2 tabindex="-1">דפי דמות</h2><p>מה שכבר שמור בדרייב, בתיקייה "דפי דמות", ומה שעוד חסר.</p></div><span class="count" id="scount">טוען מהדרייב…</span></div>
+    <p class="note" id="snote" aria-live="polite"></p>
+    <div id="sheet-list"></div>
+  </section>
+  <section id="p-voices" hidden>
+    <div class="lead"><div><h2 tabindex="-1">קולות הדמויות</h2><p>פרומפט לכל דמות, להדבקה ב-ElevenLabs Voice Design. הפרומפטים המלאים ומשפטי הבדיקה בתנ״ך הדמויות.</p></div><span class="count" id="vcount"></span></div>
+    <div id="voice-list"></div>
+  </section>
+  <div class="chat" id="chat">
+    <h3 id="chatTitle">צ׳אט עם Claude</h3>
+    <p class="sub">זה צ׳אט נפרד מהשיחה הראשית שלנו. הוא מכיר את מה שמופיע בחלונית הזו, אבל לא זוכר שיחות קודמות.</p>
+    <div class="log" id="log" role="log" aria-live="polite"></div>
+    <form class="row" id="form"><label for="q" class="sr-only">הודעה ל-Claude</label><textarea id="q" rows="2" placeholder="מה תרצי לשאול או לשנות בחלק הזה?"></textarea><button type="submit" id="send">שליחה</button></form>
+    <p class="note" id="chatNote" aria-live="polite"></p>
+  </div>
+</main>
+<script>
+{
+const FOLDER='1TTueoLmYi1WpwP-LbmdQGPmyzGe_Wqcd';
+const DOCS=[
+ {t:'תנ״ך דמויות',d:'אופי, מראה, קול ופרומפט לדף דמות לכל הדמויות. פרק פרומפטים לקולות בסוף.',u:'https://claude.ai/artifact/WfUdNLapU78QWNwyxLkYi2'},
+ {t:'תסריטים: מירו ונוני',d:'שישה פרקים עם שוטים, דיאלוג ופרומפט לכל שוט.',u:'https://claude.ai/artifact/XPHGVwRErgrNzTbwwUa6xo'},
+ {t:'תסריטים: קפי, עץ התאנה וזיפ',d:'תשעה פרקים באותו פורמט, עם נקודות בחירה.',u:'https://claude.ai/artifact/Q6ozkBJndi36LK2VkhoPEY'},
+ {t:'סילבוס לגיל הרך',d:'מבוסס מחקרי התפתחות המוח, עם התאמה למשרד החינוך.',u:'https://claude.ai/artifact/HCFrfs7haX8XvbLVVyCVEd'},
+ {t:'ספריית פרומפטים',d:'בלוק הסגנון המשותף ופרק פיזה המקורי.',u:'https://claude.ai/artifact/4ioDtsAho7t3ow4itvhn47'},
+ {t:'אפיון האפליקציה',d:'כל ההחלטות: גילאים, עולמות, סדרות, משחקים, צ׳אט, טלוויזיה ומצלמה.',u:'https://claude.ai/artifact/2AG7tZYTxPPLxwd4rmmzJN'},
+ {t:'קונספטים ומחקר שוק',d:'חמשת הקונספטים, הציונים והמחקר.',u:'https://claude.ai/artifact/5RnpT8qCfJXWt2XsRGQSrv'},
+ {t:'תיקיית הדרייב',d:'דפי דמות, תמונות מפתח ושוטים לפרקים.',u:'https://drive.google.com/drive/folders/1-wP9MbWCHSGFhctj4CT7i3VvH_7llRHL'}
+];
+const TASKS=[
+ {s:'open',t:'דפי דמות בגמיני לדמויות הראשיות החדשות',n:'קפי, בובו, אבא, אמא, סבתא, נוגה, שולי, טובי, עדי, רותי, זיפ, בועז, בורגי'},
+ {s:'open',t:'דפי דמות לדמויות האורח',n:'גלילאו, דולי, יוקי, אמרי וקימו, ביאה, ניצן'},
+ {s:'open',t:'לשמור את דפי הדמות החדשים בדרייב',n:'מירו, לילי וטוטי כבר שמורים עם שמות'},
+ {s:'open',t:'לעצב קולות ב-ElevenLabs',n:'לפי הפרומפטים בחלונית הקולות'},
+ {s:'open',t:'לגנרט שוטים ל-15 הפרקים',n:'מתחילים מפרק פיזה של נוני'},
+ {s:'open',t:'לאפיין את המשחק',n:'מטבעות, עולמות, משחקי תנועה, מרוצים ותכנות'},
+ {s:'open',t:'לאפיין את דיסקורד לקטנטנים',n:'בטיחות, מודרציה ומסכים'},
+ {s:'open',t:'לאפיין דמויות מציאותיות ואווטרים',n:'אווטרים שגדלים עם הילד, ריקוד לכל אחד'},
+ {s:'done',t:'ליטוש העיצוב של הסטודיו',n:'ניגודיות במצב כהה, פוקוס מקלדת, ניווט במובייל ונגישות הצ׳אט'},
+ {s:'done',t:'הסטודיו: חלוניות עם צ׳אט',n:'העמוד הזה, כולל התקדמות לפי חלק'},
+ {s:'done',t:'פרומפטים לקולות של כל הדמויות',n:'בתנ״ך הדמויות'},
+ {s:'done',t:'תנ״ך דמויות לחמש הסדרות',n:'25 דמויות כולל אורחים'},
+ {s:'done',t:'תסריטים לקפי, עץ התאנה וזיפ',n:'9 פרקים'},
+ {s:'done',t:'תסריטים למירו ולנוני',n:'6 פרקים'},
+ {s:'done',t:'סילבוס לגיל הרך',n:'מטרות משותפות ותחום בית לכל דמות'},
+ {s:'done',t:'דפי דמות מאושרים: מירו, לילי, טוטי',n:'ותמונת המפתח בכדור הפורח'},
+ {s:'done',t:'ספריית פרומפטים ופרק פיזה',n:''},
+ {s:'done',t:'קונספטים, מחקר שוק ואפיון האפליקציה',n:'כולל קובץ CLAUDE.md'}
+];
+const CHARS=[
+ {sr:'מירו והכדור הפורח',c:[['מירו','מירו','Energetic 6-year-old boy, bright and slightly raspy, fast, rising excitement, sheepish laugh'],['לילי','לילי','Calm, clear 6-year-old girl, measured, thoughtful pauses, dry gentle humor'],['טוטי','טוטי','Warm theatrical mid-range male voice, gently melodramatic, stretched vowels, never shouting']]},
+ {sr:'המיטה המעופפת של נוני',c:[['נוני','נוני','Soft, sleepy 5-year-old boy, slightly husky, whispers and brightens with wonder'],['פופו','פופו','Low, plush, drowsy female voice, slow and pompous like a sleepy professor, soft snores']]},
+ {sr:'משפחת קפי',c:[['קפי','קפי','Bright, bossy-but-sweet 5-year-old girl, slightly husky, speeds up with ideas'],['בובו','בובו','High, round toddler voice of a 3-year-old boy, imperfect pronunciation, contagious giggle'],['אבא','אבא','Soft, deep, gentle father voice, slow and reassuring, warm laugh'],['אמא','אמא','Warm, cheerful alto mother voice, rhythmic, almost sings when counting'],['סבתא','סבתא','Gentle elderly female storyteller, soft and slightly quavering, dramatic pauses']]},
+ {sr:'השכונה של עץ התאנה',c:[['נוגה','נוגה','Low, firm 7-year-old girl, direct, short sentences, rises when something is unfair'],['שולי','שולי','Soft, quiet 7-year-old boy, hesitant and dreamy, big words'],['טובי','טובי','Very slow, low, calm 7-year-old boy, stretched words, deadpan'],['עדי','עדי','Loud, joyful, musical 7-year-old girl, sings mid-sentence, tiny bleat-like laugh'],['המורה רותי','רותי','Warm, calm female teacher in her thirties, curious, leaves pauses after questions']]},
+ {sr:'צוות זיפ',c:[['זיפ','זיפ','Clear, focused 8-year-old girl, quick when thinking aloud, pauses of realization'],['בועז','בועז','Fast, punchy 7-year-old boy, boastful countdowns, voice cracks comically'],['בורגי','בורגי','Small cute robot voice, flat and polite, beep before sentences, always clear']]},
+ {sr:'דמויות אורח',c:[['גלילאו','גלילאו','Warm round baritone, kind scholar, very light Italian accent, chuckles'],['דולי','דולי','Bright musical young female voice, bubbly, clicking giggle'],['יוקי','יוקי','Clear polite 6-year-old girl, native Japanese pronunciation for Japanese words'],['אמרי','אמרי','Lively 6-year-old boy, competitive, natural Kenyan pronunciation for Swahili'],['קימו','קימו','Calm warm 6-year-old girl, generous, natural Kenyan pronunciation for Swahili'],['ביאה','ביאה','Warm rhythmic 7-year-old girl, natural Brazilian Portuguese pronunciation'],['ניצן','ניצן','Small quiet 7-year-old girl, shy whisper growing warmer']]}
+];
+const VOICES_DONE=[];
+const U={spec:'https://claude.ai/artifact/2AG7tZYTxPPLxwd4rmmzJN',con:'https://claude.ai/artifact/5RnpT8qCfJXWt2XsRGQSrv',bib:'https://claude.ai/artifact/WfUdNLapU78QWNwyxLkYi2',smn:'https://claude.ai/artifact/XPHGVwRErgrNzTbwwUa6xo',skz:'https://claude.ai/artifact/Q6ozkBJndi36LK2VkhoPEY',syl:'https://claude.ai/artifact/HCFrfs7haX8XvbLVVyCVEd',lib:'https://claude.ai/artifact/4ioDtsAho7t3ow4itvhn47',drv:'https://drive.google.com/drive/folders/1TTueoLmYi1WpwP-LbmdQGPmyzGe_Wqcd',shots:'https://drive.google.com/drive/folders/17Cc2kLaxaQTyMZCMdBDwswaSdfMizSLb'};
+const PARTS=[
+ {t:'סדרות',i:[['d','5 קונספטים, מחקר שוק וציונים','con'],['d','תנ״ך דמויות לחמש הסדרות','bib'],['d','תסריטים למירו ולנוני (6 פרקים)','smn'],['d','תסריטים לקפי, עץ התאנה וזיפ (9 פרקים)','skz'],['d','דפי דמות: מירו, לילי, טוטי','drv'],['o','דפי דמות לשאר הדמויות','bib'],['o','קולות הדמויות','bib'],['o','גנרוט השוטים והפרקים עצמם','shots'],['s','6–8: הילד בוחר איך העלילה ממשיכה, ושאלות בסוף נותנות נקודות','spec#series'],['o','סרטים מציאותיים לכל הגילאים','spec#series']]},
+ {t:'משחק',i:[['s','מטבעות רק מלמידה','spec#games'],['s','קונים משחקים במטבעות','spec#games'],['s','פותחים עולמות חדשים במטבעות','spec#daily'],['s','משחקי תנועה: מצלמת טלפון על סטנד, או טלפון כשלט בסגנון Wii','spec#tv'],['s','משחקים מתוך הסדרות: חנות הירקות, מרוצי זיפ, תכנות לבורגי','skz'],['o','אפיון מכניקות, שלבים ומסכים','spec#open']]},
+ {t:'דיסקורד לקטנטנים',i:[['s','שרתים לפי נושא לימוד, שיבוץ אוטומטי','spec#chat'],['s','טקסט חופשי עם סינון וחסימה אוטומטיים','spec#chat'],['s','תרגום אוטומטי בין שפות','spec#chat'],['s','נפתח רק כשהילד יודע לקרוא','spec#users'],['s','הורה יכול לכבות את הצ׳אט','spec#chat'],['s','דמויות מהסדרות כפנים של כל שרת','con'],['o','כללי בטיחות, דיווח ומודרציה','spec#open'],['o','עיצוב המסכים','spec#open']]},
+ {t:'עולמות דמיוניים',i:[['s','כל יום הילד בוחר עולם','spec#daily'],['s','עולמות קבועים, ועוד עולמות שנפתחים במטבעות','spec#daily'],['s','מחולל עולמות בכסף אמיתי, רק מאזור ההורים','spec#daily'],['s','0–5: עולם פנטזיה בתלת־ממד מציאותי, בלי דמות מלווה','spec#world05'],['o','עיצוב העולמות','spec#open']]},
+ {t:'אווטרים',i:[['s','בני אדם מציאותיים שלא קיימים, שגדלים עם הילד','spec#daily'],['s','לכל אווטר ריקוד ייחודי שבו בוחרים אותו','spec#daily'],['o','אפיון ועיצוב','spec#daily']]},
+ {t:'תוכנית לימודים',i:[['d','סילבוס לגיל הרך לפי מחקרי מוח','syl'],['d','התאמה למשרד החינוך לגיל הרך','syl'],['s','מבחן מיון, קושי מותאם והעשרה למי שמתקדם מהר','spec#games'],['o','סילבוס לגילאי 6–8 ו-9+','syl']]},
+ {t:'תחרות',i:[['s','תחרות בזמן אמת ותחרות שבועית','spec#chat'],['s','נפתחת כשהילד יודע לקרוא','spec#users'],['o','אפיון חוקים ופרסים','spec#open']]},
+ {t:'אזור הורים',i:[['s','ההורה יוצר פרופיל ובוחר גיל','spec#users'],['s','דוח התקדמות','spec#users'],['s','מתג לצ׳אט','spec#chat'],['o','עיצוב המסכים','spec#open']]},
+ {t:'גילאים וניווט',i:[['s','שלוש קבוצות: 0–5, 6–8, 9+','spec#users'],['s','הילד בוחר דמות','spec#users'],['s','0–5: ניווט בתמונות, בקול ובתנועה מול המצלמה','spec#world05'],['s','0–2: בלי סילבוס מסך','syl']]},
+ {t:'טלוויזיה, טלפון ומצלמה',i:[['s','אפליקציית טלוויזיה כמעטפת רזה שטוענת תוכן מהשרת','spec#tv'],['s','Chromecast בלי השהיה, או שיקוף מסך','spec#tv'],['s','עיבוד המצלמה על המכשיר עצמו','spec#tv'],['d','אפיון מלא (קובץ CLAUDE.md ל-Claude Code)','spec']]},
+ {t:'שפות',i:[['s','עברית, אנגלית, ערבית ו-30 השפות הנפוצות','spec#product'],['s','אותו קול לכל דמות בכל השפות','bib'],['o','בחירת שפות להשקה ראשונה','spec#open']]},
+ {t:'מודל ומימון',i:[['s','כרגע עמותה ללא מטרות רווח','spec#product'],['o','אולי מנוי בהמשך','spec#open']]}
+];
+const link=k=>{const [a,h]=k.split('#');return U[a]+(h?'#'+h:'')};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const safeUrl=u=>/^https:\/\//.test(u)?u:'#';
+
+const open=TASKS.filter(x=>x.s==='open'),done=TASKS.filter(x=>x.s==='done');
+const col=(cls,title,list)=>`<div class="col ${cls}"><h3><span class="dot" aria-hidden="true"></span>${title} (${list.length})</h3>${list.map(x=>`<div class="task"><b>${esc(x.t)}</b>${x.n?`<span>${esc(x.n)}</span>`:''}</div>`).join('')}</div>`;
+$('board').innerHTML=col('open','פתוח',open)+col('done','בוצע',done);
+$('tcount').textContent=`${done.length} בוצעו · ${open.length} פתוחות`;
+
+const W={d:1,s:.5,o:0},L={d:'בוצע',s:'אופיין',o:'פתוח'};
+let pt=0,pn=0;
+$('parts').innerHTML=PARTS.map(p=>{const sc=p.i.reduce((a,x)=>a+W[x[0]],0),pc=Math.round(sc/p.i.length*100);pt+=sc;pn+=p.i.length;
+ return `<div class="part"><h3>${esc(p.t)}<small>${pc}%</small></h3><div class="bar" aria-hidden="true"><i style="width:${pc}%"></i></div><ul>${p.i.map(([k,x,u])=>`<li><a class="item" href="${safeUrl(link(u))}" target="_blank" rel="noopener"><span class="chip ${k}">${L[k]}</span><span>${esc(x)}</span><span class="arr" aria-hidden="true">פתיחה</span></a></li>`).join('')}</ul></div>`}).join('');
+$('pcount').textContent=`${Math.round(pt/pn*100)}% מהדרך`;
+$('docgrid').innerHTML=DOCS.map(d=>`<div class="tile"><h3>${esc(d.t)}</h3><small>${esc(d.d)}</small><a class="go" href="${safeUrl(d.u)}" target="_blank" rel="noopener">פתיחת המסמך</a></div>`).join('');
+
+let files=[];
+function renderSheets(){
+  const all=CHARS.flatMap(g=>g.c.map(c=>c[1]));
+  let have=0;
+  $('sheet-list').innerHTML=CHARS.map(g=>`<h3 class="series">${esc(g.sr)}</h3><div class="grid">${g.c.map(([name,key])=>{
+    const f=files.find(f=>String(f.title||'').includes(key));
+    if(f)have++;
+    return `<div class="tile"><h3>${esc(name)}</h3>${f?`<span class="badge">שמור בדרייב</span><small>${esc(f.title)}</small><a class="go" href="${safeUrl(f.viewUrl)}" target="_blank" rel="noopener">צפייה בדרייב</a>`:`<span class="badge wait">עוד לא נוצר</span><small>הפרומפט בתנ״ך הדמויות</small>`}</div>`}).join('')}</div>`).join('');
+  $('scount').textContent=`${have} מתוך ${all.length}`;
+}
+renderSheets();
+
+const vtotal=CHARS.reduce((a,g)=>a+g.c.length,0);
+$('voice-list').innerHTML=CHARS.map(g=>`<h3 class="series">${esc(g.sr)}</h3><div class="grid">${g.c.map(([name,key,p])=>`<div class="tile"><h3>${esc(name)}</h3><span class="badge ${VOICES_DONE.includes(key)?'':'wait'}">${VOICES_DONE.includes(key)?'קול מוכן':'עוד לא נוצר'}</span><div class="prompt" lang="en">${esc(p)}</div><button class="ghost" data-copy="${esc(p)}" aria-label="העתקת הפרומפט של ${esc(name)}">העתקת הפרומפט</button></div>`).join('')}</div>`).join('');
+$('vcount').textContent=`${VOICES_DONE.length} מתוך ${vtotal}`;
+$('voice-list').addEventListener('click',async e=>{const b=e.target.closest('[data-copy]');if(!b)return;try{await navigator.clipboard.writeText(b.dataset.copy);b.textContent='הועתק';setTimeout(()=>b.textContent='העתקת הפרומפט',1500)}catch(_){b.textContent='סמני והעתיקי ידנית'}});
+
+const PANELS={tasks:'משימות',progress:'התקדמות האפליקציה',docs:'מסמכים',sheets:'דפי דמות',voices:'קולות'};
+let cur='tasks';const hist={tasks:[],progress:[],docs:[],sheets:[],voices:[]};
+function show(){
+  const h=location.hash.slice(1);cur=PANELS[h]?h:'tasks';
+  for(const k in PANELS)$('p-'+k).hidden=k!==cur;
+  for(const a of $('nav').children){if(a.getAttribute('href')==='#'+cur){a.setAttribute('aria-current','page');const n=$('nav');if(n.scrollWidth>n.clientWidth){const r=a.getBoundingClientRect(),nr=n.getBoundingClientRect();if(r.left<nr.left||r.right>nr.right)n.scrollBy({left:r.left-nr.left-(nr.width-r.width)/2})}}else a.removeAttribute('aria-current')}
+  $('chatTitle').textContent=`צ׳אט עם Claude על ${PANELS[cur]}`;
+  drawLog();
+}
+function drawLog(){$('log').innerHTML='';for(const m of hist[cur]){const d=document.createElement('div');d.className='msg '+(m.role==='user'?'me':'ai');d.textContent=m.content;$('log').append(d)}$('log').scrollTop=1e9}
+addEventListener('hashchange',()=>{show();const h=$('p-'+cur).querySelector('h2');if(h)h.focus()});show();
+
+function context(){
+  const base='את/ה עוזר/ת לאירית, סטודנטית שמאפיינת אפליקציית לימוד לילדים (עמותה ללא מטרות רווח) עם חמש סדרות מצוירות: מירו והכדור הפורח, המיטה המעופפת של נוני, משפחת קפי, השכונה של עץ התאנה וצוות זיפ. ענה/י בעברית, קצר ומעשי. אם היא מבקשת שינוי במסמכים עצמם, הסבר/י שאת השינוי היא תבקש בשיחה הראשית עם Claude, והצע/י נוסח מוכן להעתקה.';
+  const data={tasks:TASKS,progress:PARTS,docs:DOCS,sheets:{files:files.map(f=>f.title),characters:CHARS.map(g=>({series:g.sr,names:g.c.map(c=>c[0])}))},voices:CHARS}[cur];
+  return `${base}\nהחלונית הנוכחית: ${PANELS[cur]}.\nהנתונים בחלונית:\n${JSON.stringify(data)}`;
+}
+let sample=null,busy=false;
+$('form').addEventListener('submit',async e=>{
+  e.preventDefault();const q=$('q').value.trim();if(!q||busy)return;
+  if(!sample){$('chatNote').textContent='הצ׳אט לא זמין בתצוגה הזו. פתחי את העמוד ב-claude.ai.';return}
+  busy=true;$('send').disabled=true;$('chatNote').textContent='';$('log').setAttribute('aria-busy','true');
+  const h=hist[cur];h.push({role:'user',content:q});$('q').value='';
+  const ai={role:'assistant',content:'חושב…'};h.push(ai);drawLog();
+  const msgs=[{role:'user',content:context()},{role:'assistant',content:'הבנתי. במה לעזור?'},...h.slice(0,-1)];
+  const box=$('log').lastElementChild;
+  try{const r=await sample(msgs,{cache:false,onText:({text})=>{ai.content=text;if(box)box.textContent=text}});ai.content=r.text;drawLog()}
+  catch(err){h.pop();drawLog();$('chatNote').textContent=err&&err.code==='rate_limited'?'יותר מדי בקשות. נסי שוב בעוד דקה.':err&&err.code==='not_granted'?'צריך לאשר את הצ׳אט כדי להשתמש בו.':'התשובה לא הגיעה. נסי לשלוח שוב.'}
+  busy=false;$('send').disabled=false;$('log').setAttribute('aria-busy','false');
+});
+$('q').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();$('form').requestSubmit()}});
+
+(async()=>{
+  const use=n=>window.claude&&window.claude.use?window.claude.use(n):Promise.resolve(null);
+  sample=await use('sample');
+  if(!sample)$('chatNote').textContent='הצ׳אט לא זמין בתצוגה הזו. פתחי את העמוד ב-claude.ai.';
+  const mcp=await use('mcp');
+  if(!mcp){$('scount').textContent='הדרייב לא מחובר כאן';$('snote').textContent='כדי לראות מה שמור, פתחי את העמוד ב-claude.ai עם הדרייב מחובר.';return}
+  mcp.watchTool('Google Drive','search_files',{query:`parentId = '${FOLDER}' and trashed = false`,excludeContentSnippets:true,pageSize:100},ev=>{
+    if(ev.type==='data'){let p=ev.result&&ev.result.payload;if(typeof p==='string'){try{p=JSON.parse(p)}catch(_){p={}}}files=(p&&p.files)||[];renderSheets();$('snote').textContent=''}
+    else if(ev.type==='error'){$('scount').textContent='לא הצלחתי לקרוא את הדרייב';$('snote').textContent='נסי לרענן את העמוד, או לבדוק שהדרייב מחובר ב-claude.ai.'}
+  });
+})();
+}
+</script>
+</body>
+</html>
