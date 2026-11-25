@@ -29,7 +29,11 @@
 *{box-sizing:border-box;min-width:0}
 body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 Assistant,system-ui,sans-serif;overflow-x:clip}
 h1,h2,h3{font-family:Rubik,Assistant,sans-serif;line-height:1.15;margin:0;text-wrap:balance}
-a{color:inherit}
+a{color:inherit;text-underline-offset:.2em}
+p{text-wrap:pretty}
+::selection{background:var(--yel);color:#14211f}
+textarea{caret-color:var(--teal-ink)}
+html{accent-color:var(--teal);scrollbar-color:var(--line) transparent}
 :focus-visible{outline:3px solid var(--focus);outline-offset:2px}
 [tabindex="-1"]:focus{outline:none}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
@@ -49,7 +53,7 @@ section[hidden]{display:none}
 .lead{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:18px}
 .lead h2{font-size:clamp(26px,3vw,34px)}
 .lead p{margin:4px 0 0;color:var(--mute)}
-.count{font:700 15px Rubik,sans-serif;background:var(--yel2);padding:6px 12px;border-radius:99px}
+.count{font:700 15px Rubik,sans-serif;font-variant-numeric:tabular-nums;background:var(--yel2);padding:6px 12px;border-radius:99px}
 
 .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
 .col h3{font-size:18px;margin:0 0 10px;display:flex;gap:8px;align-items:center}
@@ -63,16 +67,18 @@ section[hidden]{display:none}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:14px}
 .tile{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:6px}
 .tile h3{font-size:19px}
-.tile small{color:var(--mute);font-size:14px}
+.tile small{color:var(--mute);font-size:14px;overflow-wrap:anywhere}
 .tile a.go{margin-top:auto;padding-top:4px;font-weight:700;color:var(--teal-ink);text-decoration:none}
 .tile a.go:hover{text-decoration:underline}
 .badge{align-self:flex-start;font-size:13px;font-weight:700;padding:3px 10px;border-radius:99px;background:var(--teal2);color:var(--teal-ink)}
 .badge.wait{background:var(--yel2);color:var(--yel-ink)}
+.badge.unk{background:transparent;color:var(--mute);border:1px dashed var(--field)}
+.grid.compact{grid-template-columns:repeat(auto-fill,minmax(min(100%,150px),1fr))}
 
 .parts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:16px}
 .part{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px}
 .part h3{font-size:21px;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
-.part h3 small{font:600 14px Assistant,sans-serif;color:var(--mute);white-space:nowrap}
+.part h3 small{font:600 14px Assistant,sans-serif;font-variant-numeric:tabular-nums;color:var(--mute);white-space:nowrap}
 .bar{height:8px;border-radius:99px;background:var(--line);margin:10px 0 12px;overflow:hidden}
 .bar i{display:block;height:100%;background:var(--fill);border-radius:99px}
 .part ul{list-style:none;margin:0;padding:0;display:grid;gap:7px}
@@ -92,6 +98,7 @@ section[hidden]{display:none}
 
 button{font:600 15px Assistant,sans-serif;border:0;border-radius:10px;padding:10px 16px;min-height:44px;cursor:pointer;background:var(--teal);color:#fff}
 button:hover{filter:brightness(1.1)}
+button:active{transform:translateY(1px)}
 button:disabled{opacity:.55;cursor:progress;filter:none}
 button.ghost{align-self:flex-start;background:transparent;color:var(--teal-ink);border:1px solid currentColor;min-height:40px;padding:6px 12px}
 button.ghost:hover{background:var(--teal2);filter:none}
@@ -185,7 +192,7 @@ const TASKS=[
  {s:'open',t:'לאפיין את המשחק',n:'מטבעות, עולמות, משחקי תנועה, מרוצים ותכנות'},
  {s:'open',t:'לאפיין את דיסקורד לקטנטנים',n:'בטיחות, מודרציה ומסכים'},
  {s:'open',t:'לאפיין דמויות מציאותיות ואווטרים',n:'אווטרים שגדלים עם הילד, ריקוד לכל אחד'},
- {s:'done',t:'ליטוש העיצוב של הסטודיו',n:'ניגודיות במצב כהה, פוקוס מקלדת, ניווט במובייל ונגישות הצ׳אט'},
+ {s:'done',t:'ליטוש העיצוב של הסטודיו עם Impeccable',n:'ציון 19 מתוך 20: ניגודיות, נגישות, מובייל, גופנים בלי קפיצות ומצבי טעינה בדפי הדמות'},
  {s:'done',t:'הסטודיו: חלוניות עם צ׳אט',n:'העמוד הזה, כולל התקדמות לפי חלק'},
  {s:'done',t:'פרומפטים לקולות של כל הדמויות',n:'בתנ״ך הדמויות'},
  {s:'done',t:'תנ״ך דמויות לחמש הסדרות',n:'25 דמויות כולל אורחים'},
@@ -237,15 +244,15 @@ $('parts').innerHTML=PARTS.map(p=>{const sc=p.i.reduce((a,x)=>a+W[x[0]],0),pc=Ma
 $('pcount').textContent=`${Math.round(pt/pn*100)}% מהדרך`;
 $('docgrid').innerHTML=DOCS.map(d=>`<div class="tile"><h3>${esc(d.t)}</h3><small>${esc(d.d)}</small><a class="go" href="${safeUrl(d.u)}" target="_blank" rel="noopener">פתיחת המסמך<span class="sr-only"> ${esc(d.t)}, נפתח בלשונית חדשה</span></a></div>`).join('');
 
-let files=[];
+let files=[],drive='loading';
 function renderSheets(){
   const all=CHARS.flatMap(g=>g.c.map(c=>c[1]));
   let have=0;
-  $('sheet-list').innerHTML=CHARS.map(g=>`<h3 class="series">${esc(g.sr)}</h3><div class="grid">${g.c.map(([name,key])=>{
+  $('sheet-list').innerHTML=CHARS.map(g=>`<h3 class="series">${esc(g.sr)}</h3><div class="grid compact">${g.c.map(([name,key])=>{
     const f=files.find(f=>String(f.title||'').includes(key));
     if(f)have++;
-    return `<div class="tile"><h3>${esc(name)}</h3>${f?`<span class="badge">שמור בדרייב</span><small>${esc(f.title)}</small><a class="go" href="${safeUrl(f.viewUrl)}" target="_blank" rel="noopener">צפייה בדרייב<span class="sr-only"> בדף הדמות של ${esc(name)}, נפתח בלשונית חדשה</span></a>`:`<span class="badge wait">עוד לא נוצר</span><small>הפרומפט בתנ״ך הדמויות</small>`}</div>`}).join('')}</div>`).join('');
-  $('scount').textContent=`${have} מתוך ${all.length}`;
+    return `<div class="tile"><h3>${esc(name)}</h3>${f?`<span class="badge">שמור בדרייב</span><small>${esc(f.title)}</small><a class="go" href="${safeUrl(f.viewUrl)}" target="_blank" rel="noopener">צפייה בדרייב<span class="sr-only"> בדף הדמות של ${esc(name)}, נפתח בלשונית חדשה</span></a>`:drive==='ok'?`<span class="badge wait">עוד לא נוצר</span><small>הפרומפט בתנ״ך הדמויות</small>`:`<span class="badge unk">${drive==='loading'?'בודק בדרייב…':'לא ידוע'}</span>`}</div>`}).join('')}</div>`).join('');
+  if(drive==='ok')$('scount').textContent=`${have} מתוך ${all.length}`;
 }
 renderSheets();
 
@@ -291,10 +298,10 @@ $('q').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComp
   sample=await use('sample');
   if(!sample)$('chatNote').textContent='הצ׳אט לא זמין בתצוגה הזו. פתחי את העמוד ב-claude.ai.';
   const mcp=await use('mcp');
-  if(!mcp){$('scount').textContent='הדרייב לא מחובר כאן';$('snote').textContent='כדי לראות מה שמור, פתחי את העמוד ב-claude.ai עם הדרייב מחובר.';return}
+  if(!mcp){drive='off';renderSheets();$('scount').textContent='הדרייב לא מחובר כאן';$('snote').textContent='כדי לראות מה שמור, פתחי את העמוד ב-claude.ai עם הדרייב מחובר.';return}
   mcp.watchTool('Google Drive','search_files',{query:`parentId = '${FOLDER}' and trashed = false`,excludeContentSnippets:true,pageSize:100},ev=>{
-    if(ev.type==='data'){let p=ev.result&&ev.result.payload;if(typeof p==='string'){try{p=JSON.parse(p)}catch(_){p={}}}files=(p&&p.files)||[];renderSheets();$('snote').textContent=''}
-    else if(ev.type==='error'){$('scount').textContent='לא הצלחתי לקרוא את הדרייב';$('snote').textContent='נסי לרענן את העמוד, או לבדוק שהדרייב מחובר ב-claude.ai.'}
+    if(ev.type==='data'){let p=ev.result&&ev.result.payload;if(typeof p==='string'){try{p=JSON.parse(p)}catch(_){p={}}}files=(p&&p.files)||[];drive='ok';renderSheets();$('snote').textContent=''}
+    else if(ev.type==='error'){if(drive!=='ok'){drive='error';renderSheets()}$('scount').textContent='לא הצלחתי לקרוא את הדרייב';$('snote').textContent='נסי לרענן את העמוד, או לבדוק שהדרייב מחובר ב-claude.ai.'}
   });
 })();
 }
