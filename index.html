@@ -229,9 +229,9 @@ $('tcount').textContent=`${done.length} בוצעו · ${open.length} פתוחו�
 const W={d:1,s:.5,o:0},L={d:'בוצע',s:'אופיין',o:'פתוח'};
 let pt=0,pn=0;
 $('parts').innerHTML=PARTS.map(p=>{const sc=p.i.reduce((a,x)=>a+W[x[0]],0),pc=Math.round(sc/p.i.length*100);pt+=sc;pn+=p.i.length;
- return `<div class="part"><h3>${esc(p.t)}<small>${pc}%</small></h3><div class="bar" aria-hidden="true"><i style="width:${pc}%"></i></div><ul>${p.i.map(([k,x,u])=>`<li><a class="item" href="${safeUrl(link(u))}" target="_blank" rel="noopener"><span class="chip ${k}">${L[k]}</span><span>${esc(x)}</span><span class="arr" aria-hidden="true">פתיחה</span></a></li>`).join('')}</ul></div>`}).join('');
+ return `<div class="part"><h3>${esc(p.t)}<small>${pc}%</small></h3><div class="bar" aria-hidden="true"><i style="width:${pc}%"></i></div><ul>${p.i.map(([k,x,u])=>`<li><a class="item" href="${safeUrl(link(u))}" target="_blank" rel="noopener"><span class="chip ${k}">${L[k]}</span><span>${esc(x)}</span><span class="arr" aria-hidden="true">פתיחה</span><span class="sr-only">, נפתח בלשונית חדשה</span></a></li>`).join('')}</ul></div>`}).join('');
 $('pcount').textContent=`${Math.round(pt/pn*100)}% מהדרך`;
-$('docgrid').innerHTML=DOCS.map(d=>`<div class="tile"><h3>${esc(d.t)}</h3><small>${esc(d.d)}</small><a class="go" href="${safeUrl(d.u)}" target="_blank" rel="noopener">פתיחת המסמך</a></div>`).join('');
+$('docgrid').innerHTML=DOCS.map(d=>`<div class="tile"><h3>${esc(d.t)}</h3><small>${esc(d.d)}</small><a class="go" href="${safeUrl(d.u)}" target="_blank" rel="noopener">פתיחת המסמך<span class="sr-only"> ${esc(d.t)}, נפתח בלשונית חדשה</span></a></div>`).join('');
 
 let files=[];
 function renderSheets(){
@@ -240,7 +240,7 @@ function renderSheets(){
   $('sheet-list').innerHTML=CHARS.map(g=>`<h3 class="series">${esc(g.sr)}</h3><div class="grid">${g.c.map(([name,key])=>{
     const f=files.find(f=>String(f.title||'').includes(key));
     if(f)have++;
-    return `<div class="tile"><h3>${esc(name)}</h3>${f?`<span class="badge">שמור בדרייב</span><small>${esc(f.title)}</small><a class="go" href="${safeUrl(f.viewUrl)}" target="_blank" rel="noopener">צפייה בדרייב</a>`:`<span class="badge wait">עוד לא נוצר</span><small>הפרומפט בתנ״ך הדמויות</small>`}</div>`}).join('')}</div>`).join('');
+    return `<div class="tile"><h3>${esc(name)}</h3>${f?`<span class="badge">שמור בדרייב</span><small>${esc(f.title)}</small><a class="go" href="${safeUrl(f.viewUrl)}" target="_blank" rel="noopener">צפייה בדרייב<span class="sr-only"> בדף הדמות של ${esc(name)}, נפתח בלשונית חדשה</span></a>`:`<span class="badge wait">עוד לא נוצר</span><small>הפרומפט בתנ״ך הדמויות</small>`}</div>`}).join('')}</div>`).join('');
   $('scount').textContent=`${have} מתוך ${all.length}`;
 }
 renderSheets();
