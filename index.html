@@ -4,20 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>הסטודיו של האפליקציה</title>
-<link rel="preload" href="fonts/rubik-hebrew.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/secularone-hebrew.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/assistant-hebrew.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/rubik-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/secularone-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/assistant-latin.woff2" as="font" type="font/woff2" crossorigin>
 <style>
-/* Rubik and Assistant (SIL OFL 1.1, see fonts/), self-hosted so the page never reflows when fonts arrive */
-@font-face{font-family:Rubik;font-style:normal;font-weight:500 800;font-display:optional;src:url(fonts/rubik-hebrew.woff2) format('woff2');unicode-range:U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F}
-@font-face{font-family:Rubik;font-style:normal;font-weight:500 800;font-display:optional;src:url(fonts/rubik-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+/* Secular One and Assistant (SIL OFL 1.1, see fonts/), self-hosted so the page never reflows when fonts arrive */
+@font-face{font-family:"Secular One";font-style:normal;font-weight:400;font-display:optional;src:url(fonts/secularone-hebrew.woff2) format('woff2');unicode-range:U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F}
+@font-face{font-family:"Secular One";font-style:normal;font-weight:400;font-display:optional;src:url(fonts/secularone-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
 @font-face{font-family:Assistant;font-style:normal;font-weight:400 700;font-display:optional;src:url(fonts/assistant-hebrew.woff2) format('woff2');unicode-range:U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F}
 @font-face{font-family:Assistant;font-style:normal;font-weight:400 700;font-display:optional;src:url(fonts/assistant-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
 /* VOICE: a working studio wall for one creator, warm and practical
    IDEA: the production board pinned in an animation studio: cards per stage
    PICTURE: the task board itself, open at the top
-   COLOUR and TYPE: Miro's teal ground band, Lili's notebook yellow as accent, ink on paper; Rubik + Assistant
+   COLOUR and TYPE: Miro's teal ground band, Lili's notebook yellow as accent, ink on paper; Secular One + Assistant
    LAYOUT: teal header with panel tabs, one panel at a time, a chat with Claude under each panel */
 :root{color-scheme:light dark;
 --bg:light-dark(#fbfaf6,#101716);--card:light-dark(#ffffff,#18221f);--ink:light-dark(#14211f,#e9f0ee);
@@ -28,7 +28,7 @@
 :root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
 *{box-sizing:border-box;min-width:0}
 body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 Assistant,system-ui,sans-serif;overflow-x:clip}
-h1,h2,h3{font-family:Rubik,Assistant,sans-serif;line-height:1.15;margin:0;text-wrap:balance}
+h1,h2,h3{font-family:"Secular One",Assistant,sans-serif;font-weight:400;line-height:1.15;margin:0;text-wrap:balance}
 a{color:inherit;text-underline-offset:.2em}
 p{text-wrap:pretty}
 ::selection{background:var(--yel);color:#14211f}
@@ -41,10 +41,10 @@ html{accent-color:var(--teal);scrollbar-color:var(--line) transparent}
 
 header{background:var(--teal);color:#fff;padding-top:28px}
 header :focus-visible{outline-color:var(--yel)}
-header h1{font-size:clamp(30px,4.4vw,46px);font-weight:800}
+header h1{font-size:clamp(32px,4.6vw,50px);font-weight:400}
 header p{margin:6px 0 18px;opacity:.88;max-width:62ch}
 nav{display:flex;gap:6px;flex-wrap:wrap}
-nav a{text-decoration:none;font:700 16px Rubik,sans-serif;padding:12px 18px;border-radius:12px 12px 0 0;color:#fff;opacity:.88;min-height:44px;display:flex;align-items:center}
+nav a{text-decoration:none;font:400 16px "Secular One",Assistant,sans-serif;padding:12px 18px;border-radius:12px 12px 0 0;color:#fff;opacity:.88;min-height:44px;display:flex;align-items:center}
 nav a:not([aria-current]):hover{opacity:1;background:rgb(255 255 255/.12)}
 nav a[aria-current=page]{background:var(--bg);color:var(--ink);opacity:1}
 
@@ -53,14 +53,14 @@ section[hidden]{display:none}
 .lead{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:18px}
 .lead h2{font-size:clamp(26px,3vw,34px)}
 .lead p{margin:4px 0 0;color:var(--mute)}
-.count{font:700 15px Rubik,sans-serif;font-variant-numeric:tabular-nums;background:var(--yel2);padding:6px 12px;border-radius:99px}
+.count{font:400 15px "Secular One",Assistant,sans-serif;font-variant-numeric:tabular-nums;background:var(--yel2);padding:6px 12px;border-radius:99px}
 
 .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
 .col h3{font-size:18px;margin:0 0 10px;display:flex;gap:8px;align-items:center}
 .dot{flex:none;width:10px;height:10px;border-radius:50%;background:var(--mute)}
 .col.done .dot{background:var(--teal)}.col.open .dot{background:var(--yel)}
 .task{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:10px}
-.task b{display:block;font-family:Rubik,sans-serif;font-weight:500}
+.task b{display:block;font-family:"Secular One",Assistant,sans-serif;font-weight:400}
 .task span{color:var(--mute);font-size:15px}
 .col.done .task b{color:var(--mute)}
 
@@ -192,6 +192,7 @@ const TASKS=[
  {s:'open',t:'לאפיין את המשחק',n:'מטבעות, עולמות, משחקי תנועה, מרוצים ותכנות'},
  {s:'open',t:'לאפיין את דיסקורד לקטנטנים',n:'בטיחות, מודרציה ומסכים'},
  {s:'open',t:'לאפיין דמויות מציאותיות ואווטרים',n:'אווטרים שגדלים עם הילד, ריקוד לכל אחד'},
+ {s:'done',t:'גופן חדש לסטודיו',n:'Secular One לכותרות ו-Assistant לטקסט'},
  {s:'done',t:'ליטוש העיצוב של הסטודיו עם Impeccable',n:'ציון 19 מתוך 20: ניגודיות, נגישות, מובייל, גופנים בלי קפיצות ומצבי טעינה בדפי הדמות'},
  {s:'done',t:'הסטודיו: חלוניות עם צ׳אט',n:'העמוד הזה, כולל התקדמות לפי חלק'},
  {s:'done',t:'פרומפטים לקולות של כל הדמויות',n:'בתנ״ך הדמויות'},
